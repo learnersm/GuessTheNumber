@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>Number guessing game</title>
+
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+      h1{
+        margin: 0px;
+      }
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+      .inputPart, .outputPart{
+        border: 2px solid black;
+        padding: 20px;
+        margin: 10px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+
+  <body>
+      <div class="inputPart">
+        <h1>Number guessing game</h1>
+
+        <p>We have selected a random number between 1 and 100. See if you can guess it in 10 turns or fewer. We'll tell you if your guess was too high or too low.</p>
+
+        <div class="form">
+          <label for="guessField">Enter a guess: </label><input type="text" id="guessField" class="guessField">
+          <input type="submit" value="Submit guess" class="guessSubmit">
+        </div>
+      </div>
+
+    <div class="outputPart">  
+      <div class="resultParas">
+        <p class="guesses"></p>
+        <p class="lastResult"></p>
+        <p class="lowOrHi"></p>
+      </div>
+    </div>
+
+<script>
+  // Your JavaScript goes here
+
+  //Initialing variables first
+
+  var randomNumber = Math.floor(Math.random() * 100) + 1;
+
+  var guesses = document.querySelector('.guesses');
+  var lastResult = document.querySelector('.lastResult');
+  var lowOrHi = document.querySelector('.lowOrHi');
+
+  var guessSubmit = document.querySelector('.guessSubmit');
+  var guessField = document.querySelector('.guessField');
+
+  var outputPart = document.querySelector('.outputPart');
+
+  var guessCount = 1;
+  var resetButton;
+  
+
+  //functions
+  
+  //the main thing about writing clean , modular code is, understanding which part will be reused
+  //in other parts of the program, and create functions for them.
+  function checkGuess(){
+    //alert('I am a placeholder');
+    
+    var userGuess = Number(guessField.value);
+    var lowHiBaseMessage = "Your guess was : ";
+    if (userGuess === randomNumber){
+      lastResult.textContent = 'Congratulations! You got it right!';
+      lastResult.style.backgroundColor = 'green';
+      setGameOver();
+    } else if(guessCount === 10) {
+      //i.e the present guess is the 11th guess
+      lastResult.textContent = 'Sorry! YOU LOSE';
+      lastResult.style.backgroundColor = 'red';
+      setGameOver();
+    } else {
+      //also handles non numeric input
+      lastResult.textContent = 'Wrong!';
+      lastResult.style.backgroundColor = 'red';
+      if(guessCount === 1){
+        guesses.textContent = 'Your Guesses: ';
+        outputPart.style.border = '2px solid black';
+      }
+      guesses.textContent += userGuess + ' ';
+      if(userGuess < randomNumber){
+        lowOrHi.textContent = lowHiBaseMessage + 'lower!';
+      } else {
+        lowOrHi.textContent = lowHiBaseMessage + 'higher!';
+      }
+    }
+
+    //for every guess these must occur
+    guessCount++;
+    guessField.value = '';
+    guessField.focus();
+
+  }
+
+  function setGameOver() {
+  guessField.disabled = true;
+  guessSubmit.disabled = true;
+  resetButton = document.createElement('button');
+  resetButton.textContent = 'Start new game';
+  document.body.appendChild(resetButton);
+  resetButton.addEventListener('click', resetGame);
+  lowOrHi.textContent = '';
+}
+
+  function resetGame() {
+  guessCount = 1;
+
+  var resetParas = document.querySelectorAll('.resultParas p');
+  for (var i = 0 ; i < resetParas.length ; i++) {
+    resetParas[i].textContent = '';
+  }
+
+  if(resetButton){
+    resetButton.parentNode.removeChild(resetButton);
+  }
+
+  guessField.disabled = false;
+  guessSubmit.disabled = false;
+  guessField.value = '';
+  guessField.focus();
+
+  lastResult.style.backgroundColor = 'white';
+
+  randomNumber = Math.floor(Math.random() * 100) + 1;
+  outputPart.style.border = '2px solid white';
+}
+
+  // adding functions to objects
+  resetGame();
+  guessSubmit.addEventListener('click', checkGuess);
+
+</script>
+</body>
+</html>
