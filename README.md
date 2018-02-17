@@ -1,4 +1,4 @@
-# guess-the-number
+# Guess-the-number
 BinarySearch + Javascript Basic Tutorial, Source : Mozilla MDN
 
 An attempt to understand the very basics of javascript
